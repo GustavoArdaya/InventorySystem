@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "Inv_InventoryComponent.generated.h"
 
+class UInv_InventoryItem;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInventoryItemChange, UInv_InventoryItem*, Item);
+
 
 class UInv_InventoryBase;
 
@@ -18,6 +21,9 @@ public:
 	UInv_InventoryComponent();
 
 	void ToggleInventoryMenu();
+
+	FInventoryItemChange OnItemAdded;
+	FInventoryItemChange OnItemRemoved;
 
 protected:
 	virtual void BeginPlay() override;
