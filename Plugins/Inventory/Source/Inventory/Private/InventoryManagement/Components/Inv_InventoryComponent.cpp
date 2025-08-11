@@ -9,7 +9,7 @@ UInv_InventoryComponent::UInv_InventoryComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UInv_InventoryComponent::TryAddItem(UInv_ItemComponent* ItemComponent) const
+void UInv_InventoryComponent::TryAddItem(UInv_ItemComponent* ItemComponent)
 {
 	FInv_SlotAvailabilityResult Result = InventoryMenu->HasRoomForItem(ItemComponent);
 
@@ -19,7 +19,28 @@ void UInv_InventoryComponent::TryAddItem(UInv_ItemComponent* ItemComponent) cons
 		return;		
 	}
 
-	// TODO: Add item to inventory logic here
+	if (Result.Item.IsValid() && Result.bStackable)
+	{
+		// Add stacks to existing item. We only update stack count
+		Server_AddStacksToItem(ItemComponent, Result.TotalRoomToFill, Result.Remainder);
+	}
+	else if (Result.TotalRoomToFill > 0)
+	{
+		// Create new item. Update all pertinent slots
+		Server_AddNewItem(ItemComponent, Result.bStackable ? Result.TotalRoomToFill : 0);
+	}
+}
+
+void UInv_InventoryComponent::Server_AddNewItem_Implementation(UInv_ItemComponent* ItemComponent, int32 StackCount)
+{
+	
+}
+
+
+void UInv_InventoryComponent::Server_AddStacksToItem_Implementation(UInv_ItemComponent* ItemComponent, int32 StackCount,
+	int32 Remainder)
+{
+	
 }
 
 void UInv_InventoryComponent::ToggleInventoryMenu()
