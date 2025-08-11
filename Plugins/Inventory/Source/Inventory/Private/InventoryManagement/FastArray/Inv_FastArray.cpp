@@ -1,7 +1,9 @@
 ﻿#include "InventoryManagement/FastArray/Inv_FastArray.h"
 
+#include "IDetailTreeNode.h"
 #include "InventoryManagement/Components/Inv_InventoryComponent.h"
 #include "Items/Inv_InventoryItem.h"
+#include "Items/Components/Inv_ItemComponent.h"
 
 TArray<UInv_InventoryItem*> FInv_InventoryFastArray::GetAllItems() const
 {
@@ -39,8 +41,19 @@ void FInv_InventoryFastArray::PostReplicatedAdd(const TArrayView<int32>& AddedIn
 
 UInv_InventoryItem* FInv_InventoryFastArray::AddEntry(UInv_ItemComponent* ItemComponent)
 {
-	// TODO: Once ItemComponent is more complete
-	return nullptr;
+	check(OwnerComponent);
+	AActor* OwningActor = OwnerComponent->GetOwner();
+	check(OwningActor->HasAuthority());
+
+	UInv_InventoryComponent* IC = Cast<UInv_InventoryComponent>(OwnerComponent);
+	if (!IsValid(IC)) return nullptr;
+
+	FInv_InventoryEntry& NewEntry = Entries.AddDefaulted_GetRef();
+	NewEntry.Item = ItemComponent->GetItemManifest().Manifest(OwningActor);
+	IC->AddRepSubObj(NewEntry.Item);
+	MarkItemDirty(NewEntry);
+	
+	return NewEntry.Item;
 }
 
 UInv_InventoryItem* FInv_InventoryFastArray::AddEntry(UInv_InventoryItem* Item)
