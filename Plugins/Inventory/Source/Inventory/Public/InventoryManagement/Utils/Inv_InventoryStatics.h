@@ -8,6 +8,7 @@
 #include "Inv_InventoryStatics.generated.h"
 
 class UInv_InventoryComponent;
+class UInv_ItemComponent;
 /**
  * 
  */
