@@ -45,6 +45,9 @@ FInv_SlotAvailabilityResult UInv_InventoryGrid::HasRoomForItem(const FInv_ItemMa
 	Result.bStackable = StackableFragment != nullptr;
 	
 	// If Stackable determine how many stacks to add.
+	const int32 MaxStackSize = Result.bStackable ? StackableFragment->GetMaxStackSize() : 1;
+	int32 AmountToFill = Result.bStackable ? StackableFragment->GetStackCount() : 1;
+	
 	// Foreach Grid Slot:
 		// If nothing to fill break
 		// Is this index filled?
