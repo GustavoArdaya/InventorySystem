@@ -39,20 +39,26 @@ FInv_SlotAvailabilityResult UInv_InventoryGrid::HasRoomForItem(const UInv_Invent
 FInv_SlotAvailabilityResult UInv_InventoryGrid::HasRoomForItem(const FInv_ItemManifest& Manifest)
 {
 	FInv_SlotAvailabilityResult Result;
-	Result.TotalRoomToFill = 7;
-	Result.bStackable = true;
 
-	FInv_SlotAvailability SlotAvailability;
-	SlotAvailability.AmountToFill = 2;
-	SlotAvailability.Index = 0;
-
-	Result.SlotAvailabilities.Add(MoveTemp(SlotAvailability));
+	// Determine if item is stackable
+	const FInv_StackableFragment* StackableFragment = Manifest.GetFragmentOfType<FInv_StackableFragment>();
+	Result.bStackable = StackableFragment != nullptr;
 	
-	FInv_SlotAvailability SlotAvailability2;
-	SlotAvailability2.AmountToFill = 5;
-	SlotAvailability2.Index = 1;
-
-	Result.SlotAvailabilities.Add(MoveTemp(SlotAvailability2));
+	// If Stackable determine how many stacks to add.
+	// Foreach Grid Slot:
+		// If nothing to fill break
+		// Is this index filled?
+		// If valid spot, can item fit? (i.e. out of grid bounds)
+		// Is there room at this index? (i.e. other items in the way)
+		// Check other important conditions - ForEach2D over 2D range
+			// Index Claimed?
+			// Has valid item?
+			// Is item the same type?
+			// Is item stackable?
+			// Is item full stack?
+		// How much to fill?
+		// Update amount left to fill
+	// How much is the remainder?
 	
 	return Result;
 }
