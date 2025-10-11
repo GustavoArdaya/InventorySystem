@@ -48,22 +48,75 @@ FInv_SlotAvailabilityResult UInv_InventoryGrid::HasRoomForItem(const FInv_ItemMa
 	const int32 MaxStackSize = Result.bStackable ? StackableFragment->GetMaxStackSize() : 1;
 	int32 AmountToFill = Result.bStackable ? StackableFragment->GetStackCount() : 1;
 	
+	TSet<int32> CheckedIndices;
+
 	// Foreach Grid Slot:
+	for (const auto& GridSlot : GridSlots)
+	{
 		// If nothing to fill break
-		// Is this index filled?
+		if (AmountToFill <= 0) break;
+		
+		// Is this index claimed?
+		if (IsIndexClaimed(CheckedIndices, GridSlot->GetIndex())) continue;
+		
 		// If valid spot, can item fit? (i.e. out of grid bounds)
-		// Is there room at this index? (i.e. other items in the way)
-		// Check other important conditions - ForEach2D over 2D range
-			// Index Claimed?
-			// Has valid item?
-			// Is item the same type?
-			// Is item stackable?
-			// Is item full stack?
+		TSet<int32> TentativelyClaimed;
+		if (!HasRoomAtIndex(GridSlot, GetItemDimensions(Manifest), CheckedIndices, TentativelyClaimed))
+		{
+			continue;
+		}
+
+		CheckedIndices.Append(TentativelyClaimed);
+		
+		
+		
 		// How much to fill?
 		// Update amount left to fill
+	}
+
+	
 	// How much is the remainder?
 	
 	return Result;
+}
+
+bool UInv_InventoryGrid::HasRoomAtIndex(const UInv_GridSlot* GridSlot, const FIntPoint& Dimensions, const TSet<int32>& CheckedIndices, TSet<int32>&
+						OutTentativelyClaimed)
+{
+	// Is there room at this index? (i.e. other items in the way)
+	//bool bHasRoomAtIndex = true;
+	UInv_InventoryStatics::ForEach2D(GridSlots, GridSlot->GetIndex(), Dimensions, Columns, [&](const UInv_GridSlot* SubGridSlot)
+	{
+		if (CheckSlotConstraints(SubGridSlot))
+		{
+			OutTentativelyClaimed.Add(SubGridSlot->GetIndex());
+		}
+		else
+		{
+			//bHasRoomAtIndex = false;
+			return false;
+		}
+	});
+	
+	//return bHasRoomAtIndex;
+	return true;
+}
+
+FIntPoint UInv_InventoryGrid::GetItemDimensions(const FInv_ItemManifest& Manifest) const
+{
+	const FInv_GridFragment* GridFragment = Manifest.GetFragmentOfType<FInv_GridFragment>();
+	return GridFragment ? GridFragment->GetGridSize() : FIntPoint(1, 1);
+}
+
+bool UInv_InventoryGrid::CheckSlotConstraints(const UInv_GridSlot* SubGridSlot) const
+{
+	// Check other important conditions - ForEach2D over 2D range
+	// Index Claimed?
+	// Has valid item?
+	// Is item the same type?
+	// Is item stackable?
+	// Is item full stack?
+	return false;
 }
 
 
@@ -144,6 +197,13 @@ void UInv_InventoryGrid::UpdateGridSlots(UInv_InventoryItem* NewItem, const int3
 		GridSlot->SetAvailable(false);
 	});
 }
+
+bool UInv_InventoryGrid::IsIndexClaimed(const TSet<int32>& CheckedIndices, int32 Index) const
+{
+	return CheckedIndices.Contains(Index);
+}
+
+
 
 FVector2D UInv_InventoryGrid::GetDrawSize(const FInv_GridFragment* GridFragment) const
 {
