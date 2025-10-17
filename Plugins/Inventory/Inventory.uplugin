@@ -25,6 +25,10 @@
 		{
 			"name": "EnhancedInput",
 			"Enabled": true
+		},
+		{
+			"name": "StructUtils",
+			"Enabled": true
 		}
 	]
 }

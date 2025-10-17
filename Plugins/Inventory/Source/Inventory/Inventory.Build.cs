@@ -6,7 +6,7 @@ public class Inventory : ModuleRules
 {
 	public Inventory(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
@@ -42,7 +42,8 @@ public class Inventory : ModuleRules
 				"Slate",
 				"SlateCore", 
 				"EnhancedInput", 
-				"UMG"
+				"UMG",
+				"InputCore"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
