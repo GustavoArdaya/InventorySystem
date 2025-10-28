@@ -568,8 +568,11 @@ void UInv_InventoryGrid::OnSlottedItemClicked(int32 GridIndex, const FPointerEve
 			return;
 		}
 		
-		// No room in clicked slot?
-		return;
+		// Clicked slot is already full
+		if (RoomInClickedSlot == 0)
+		{
+			return;			
+		}
 	}
 	// Else, Swap with hover item
 	SwapWithHoverItem(ClickedInventoryItem, GridIndex);
