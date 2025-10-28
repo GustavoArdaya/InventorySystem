@@ -6,10 +6,17 @@
 #include "Blueprint/UserWidget.h"
 #include "Inv_ItemPopUp.generated.h"
 
+
 class USizeBox;
 class UTextBlock;
 class USlider;
 class UButton;
+
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FPopUpMenuSplit, int32, SplitAmount, int32, Index);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FPopUpMenuDrop, int32, Index);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FPopUpMenuConsume, int32, Index);
+
+
 /**
  * Item Pop-Up widget to display options when right clicking on item on Inventory Grid
  */
@@ -21,6 +28,12 @@ class INVENTORY_API UInv_ItemPopUp : public UUserWidget
 public:
 
 	virtual void NativeOnInitialized() override;
+
+	FPopUpMenuSplit OnSplit;
+	FPopUpMenuDrop OnDrop;
+	FPopUpMenuConsume OnConsume;
+
+	int32 GetSplitAmount() const;
 
 private:
 
@@ -41,6 +54,8 @@ private:
 
 	UPROPERTY(Meta = (BindWidget))
 	TObjectPtr<USizeBox> SizeBox_Root;
+
+	int32 GridIndex{INDEX_NONE};
 
 	UFUNCTION()
 	void SplitButtonClicked();
