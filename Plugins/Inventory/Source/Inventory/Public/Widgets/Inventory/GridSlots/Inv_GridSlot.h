@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Inv_GridSlot.generated.h"
 
+class UInv_ItemPopUp;
 class UImage;
 class UInv_InventoryItem;
 
@@ -35,7 +36,8 @@ public:
 	void SetTileIndex(int32 Index) { TileIndex = Index; }
 	int32 GetTileIndex() const { return TileIndex; }
 	EInv_GridSlotState GetGridSlotState() const { return GridSlotState; }
-	TWeakObjectPtr<UInv_InventoryItem> GetInventoryItem() const { return InventoryItem; }
+	TWeakObjectPtr<UInv_InventoryItem> GetInventoryItem() const { return InventoryItem; }	
+	
 	void SetInventoryItem(UInv_InventoryItem* Item);
 	int32 GetIndex() const { return TileIndex; }
 	void SetIndex(int32 Index) { TileIndex = Index; }
@@ -45,6 +47,8 @@ public:
 	void SetUpperLeftIndex(int32 Index) { UpperLeftIndex = Index; }
 	bool IsAvailable() const { return bAvailable; }
 	void SetAvailable(bool bIsAvailable) { bAvailable = bIsAvailable; }
+	void SetItemPopUp(UInv_ItemPopUp* Popup);
+	UInv_ItemPopUp* GetItemPopUp() const;
 
 	void SetOccupiedTexture();
 	void SetUnoccupiedTexture();
@@ -57,11 +61,12 @@ public:
 
 private:
 
-	int32 TileIndex{INDEX_NONE};
 	int32 StackCount{0};
+	bool bAvailable {true};
+	int32 TileIndex{INDEX_NONE};
 	int32 UpperLeftIndex{INDEX_NONE};
 	TWeakObjectPtr<UInv_InventoryItem> InventoryItem;
-	bool bAvailable {true};
+	TWeakObjectPtr<UInv_ItemPopUp> ItemPopup;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UImage> Image_GridSlot;
@@ -80,6 +85,7 @@ private:
 
 	EInv_GridSlotState GridSlotState;
 
-	
+	UFUNCTION()
+	void OnItemPopUpDestruct(UUserWidget* Menu);
 	
 };
