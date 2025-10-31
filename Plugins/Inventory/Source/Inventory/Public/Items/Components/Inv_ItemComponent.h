@@ -19,6 +19,7 @@ public:
 
 	FString GetPickupMessage() const { return PickupMessage; }
 
+	void InitItemManifest(FInv_ItemManifest CopyOfManifest);
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	FInv_ItemManifest GetItemManifest() const { return ItemManifest; }
 	void PickedUp();
