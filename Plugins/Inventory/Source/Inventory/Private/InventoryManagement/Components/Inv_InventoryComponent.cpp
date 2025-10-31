@@ -83,6 +83,27 @@ void UInv_InventoryComponent::Server_AddStacksToItem_Implementation(UInv_ItemCom
 	}
 }
 
+void UInv_InventoryComponent::Server_DropItem_Implementation(UInv_InventoryItem* Item, int32 StackCount)
+{
+	const int32 NewStackCount = Item->GetTotalStackCount() - StackCount;
+	if (NewStackCount <= 0)
+	{
+		InventoryList.RemoveEntry(Item);
+	}
+	else
+	{
+		Item->SetTotalStackCount(NewStackCount);
+	}
+
+	SpawnDroppedItem(Item, StackCount);
+	
+}
+
+void UInv_InventoryComponent::SpawnDroppedItem(UInv_InventoryItem* Item, int32 StackCount)
+{
+	// TODO: Spawn item in level
+}
+
 void UInv_InventoryComponent::ToggleInventoryMenu()
 {
 	bInventoryMenuOpen ? CloseInventoryMenu() : OpenInventoryMenu();
@@ -95,7 +116,6 @@ void UInv_InventoryComponent::AddRepSubObj(UObject* SubObj)
 		AddReplicatedSubObject(SubObj);		
 	}
 }
-
 
 void UInv_InventoryComponent::BeginPlay()
 {
