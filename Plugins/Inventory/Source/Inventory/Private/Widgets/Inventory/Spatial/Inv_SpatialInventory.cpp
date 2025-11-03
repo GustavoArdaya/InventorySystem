@@ -4,8 +4,10 @@
 #include "Widgets/Inventory/Spatial/Inv_SpatialInventory.h"
 
 #include "Inventory.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
 #include "Components/WidgetSwitcher.h"
 #include "InventoryManagement/Utils/Inv_InventoryStatics.h"
 #include "Items/Components/Inv_ItemComponent.h"
@@ -31,6 +33,31 @@ FReply UInv_SpatialInventory::NativeOnMouseButtonDown(const FGeometry& InGeometr
 {
 	ActiveGrid->DropItem();
 	return FReply::Handled();	
+}
+
+void UInv_SpatialInventory::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if (!IsValid(ItemDescription)) return;
+	SetItemDescriptionSizeAndPosition(ItemDescription, CanvasPanel);
+}
+
+void UInv_SpatialInventory::SetItemDescriptionSizeAndPosition(UInv_ItemDescription* Description,
+	UCanvasPanel* Canvas) const
+{
+	UCanvasPanelSlot* ItemDescriptionCPS = UWidgetLayoutLibrary::SlotAsCanvasSlot(Description);
+	if (!IsValid(ItemDescriptionCPS)) return;
+
+	const FVector2D ItemDescriptionSize = Description->GetBoxSize();
+	ItemDescriptionCPS->SetSize(ItemDescriptionSize);
+
+	FVector2D ClampedPosition = UInv_WidgetUtils::GetClampedWidgetPosition(
+		UInv_WidgetUtils::GetWidgetSize(Canvas),
+		ItemDescriptionSize,
+		UWidgetLayoutLibrary::GetMousePositionOnViewport(GetOwningPlayer()));
+
+	ItemDescriptionCPS->SetPosition(FVector2D(ClampedPosition));
 }
 
 FInv_SlotAvailabilityResult UInv_SpatialInventory::HasRoomForItem(UInv_ItemComponent* ItemComponent) const
@@ -119,3 +146,5 @@ void UInv_SpatialInventory::SetActiveGrid(UInv_InventoryGrid* Grid, UButton* But
 	DisableButton(Button);
 	Switcher->SetActiveWidget(Grid);
 }
+
+

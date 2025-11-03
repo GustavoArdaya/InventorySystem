@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/CanvasPanel.h"
 #include "Widgets/Inventory/InventoryBase/Inv_InventoryBase.h"
 #include "Inv_SpatialInventory.generated.h"
 
@@ -23,6 +24,7 @@ public:
 
 	virtual void NativeOnInitialized() override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	virtual FInv_SlotAvailabilityResult HasRoomForItem(UInv_ItemComponent* ItemComponent) const override;
 	virtual void OnItemHovered(UInv_InventoryItem* Item) override;
@@ -77,7 +79,8 @@ private:
 	UFUNCTION()
 	void ShowCraftables();
 	void DisableButton(UButton* Button);
-
 	void SetActiveGrid(UInv_InventoryGrid* Grid, UButton* Button);
+	void SetItemDescriptionSizeAndPosition(UInv_ItemDescription* Description, UCanvasPanel* Canvas) const;
+	
 	TWeakObjectPtr<UInv_InventoryGrid> ActiveGrid;
 };
