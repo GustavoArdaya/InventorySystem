@@ -10,6 +10,7 @@
  * Item Manifest contains all necessary data for creating new inventory item
 **/
 
+class UInv_CompositeBase;
 struct FInv_ItemFragment;
 class UInv_InventoryItem;
 
@@ -21,6 +22,7 @@ struct INVENTORY_API FInv_ItemManifest
 	UInv_InventoryItem* Manifest(UObject* NewOuter);
 	EInv_ItemCategory GetItemCategory() const { return ItemCategory; }
 	FGameplayTag GetItemType() const { return ItemType; }
+	void AssimilateInventoryFragment(UInv_CompositeBase* Composite) const;
 
 	template<typename T> requires std::derived_from<T, FInv_ItemFragment>
 	const T* GetFragmentOfTypeWithTag(const FGameplayTag& FragmentTag) const;
@@ -30,6 +32,9 @@ struct INVENTORY_API FInv_ItemManifest
 
 	template<typename T> requires std::derived_from<T, FInv_ItemFragment>
 	T* GetFragmentOfTypeMutable();
+
+	template<typename T> requires std::derived_from<T, FInv_ItemFragment>
+	TArray<const T*> GetAllFragmentsOfType() const;
 
 	void SpawnPickupActor(const UObject* WorldContextObject, const FVector& SpawnLocation, const FRotator& SpawnRotation);
 
@@ -88,4 +93,18 @@ template<typename T> requires std::derived_from<T, FInv_ItemFragment>
 		}		
 	}
 	return nullptr;
+}
+
+template <typename T> requires std::derived_from<T, FInv_ItemFragment>
+TArray<const T*> FInv_ItemManifest::GetAllFragmentsOfType() const
+{
+	TArray<const T*> FoundFragments;
+	for (const TInstancedStruct<FInv_ItemFragment>& Fragment : Fragments)
+	{
+		if (const T* FragmentPtr = Fragment.GetPtr<T>())
+		{
+			FoundFragments.Add(FragmentPtr);
+		}		
+	}
+	return FoundFragments;
 }

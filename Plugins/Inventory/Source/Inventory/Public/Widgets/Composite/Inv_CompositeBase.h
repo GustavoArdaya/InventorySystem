@@ -19,7 +19,7 @@ public:
 
 	FGameplayTag GetFragmentTag() const { return FragmentTag; }
 	void SetFragmentTag(const FGameplayTag& Tag) { FragmentTag = Tag; }
-	virtual void Collapse() {}
+	virtual void Collapse();
 	void Expand();
 
 	using FuncType = TFunction<void(UInv_CompositeBase*)>;
