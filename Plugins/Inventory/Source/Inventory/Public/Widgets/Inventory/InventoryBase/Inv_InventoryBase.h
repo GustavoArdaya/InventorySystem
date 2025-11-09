@@ -11,6 +11,7 @@
  * 
  */
 
+class UInv_HoverItem;
 class UInv_ItemComponent;
 class UInv_InventoryItem;
 
@@ -25,4 +26,5 @@ public:
 	virtual void OnItemHovered(UInv_InventoryItem* Item) {}
 	virtual void OnItemUnhovered() {}
 	virtual bool HasHoverItem() const { return false; }
+	virtual UInv_HoverItem* GetHoverItem() { return nullptr; }
 };

@@ -8,8 +8,8 @@
 #include "Types/Inv_GridTypes.h"
 #include "Inv_InventoryGrid.generated.h"
 
-class UInv_ItemPopUp;
 class UInv_HoverItem;
+class UInv_ItemPopUp;
 struct FInv_ImageFragment;
 class UInv_SlottedItem;
 struct FInv_GridFragment;
@@ -18,7 +18,6 @@ struct FInv_ItemManifest;
 class UInv_InventoryComponent;
 class UCanvasPanel;
 class UInv_GridSlot;
-class UInv_InventoryItem;
 enum class EInv_GridSlotState : uint8;
 /**
  * 
@@ -41,6 +40,7 @@ public:
 	void SetOwningCanvas(UCanvasPanel* OwningCanvas);
 	void DropItem();
 	bool HasHoverItem() const;
+	UInv_HoverItem* GetHoverItem() const;
 	
 	UFUNCTION()
 	void AddItem(UInv_InventoryItem* Item);
