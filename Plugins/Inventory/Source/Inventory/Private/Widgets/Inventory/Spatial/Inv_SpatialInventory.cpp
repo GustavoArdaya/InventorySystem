@@ -50,6 +50,7 @@ void UInv_SpatialInventory::EquippedGridSlotClicked(UInv_EquippedGridSlot* GridS
 	
 	// Create and add equipped slotted item
 	
+	
 	// Clear Hover Item
 
 	// Inform server item equipped/unequipped
