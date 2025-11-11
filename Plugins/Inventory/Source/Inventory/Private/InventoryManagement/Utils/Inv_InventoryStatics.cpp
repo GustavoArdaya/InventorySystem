@@ -56,3 +56,11 @@ UInv_HoverItem* UInv_InventoryStatics::GetHoverItem(APlayerController* PlayerCon
 
 	return InventoryBase->GetHoverItem();
 }
+
+UInv_InventoryBase* UInv_InventoryStatics::GetInventoryWidget(APlayerController* PlayerController)
+{
+	UInv_InventoryComponent* InventoryComponent = GetInventoryComponent(PlayerController);
+	if (!IsValid(InventoryComponent)) return nullptr;
+
+	return InventoryComponent->GetInventoryMenu();
+}

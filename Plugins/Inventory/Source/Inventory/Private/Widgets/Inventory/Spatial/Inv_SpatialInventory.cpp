@@ -14,6 +14,7 @@
 #include "Items/Components/Inv_ItemComponent.h"
 #include "Widgets/Inventory/GridSlots/Inv_EquippedGridSlot.h"
 #include "Widgets/Inventory/HoverItem/Inv_HoverItem.h"
+#include "Widgets/Inventory/SlottedItems/Inv_EquippedSlottedItem.h"
 #include "Widgets/Inventory/Spatial/Inv_InventoryGrid.h"
 #include "Widgets/ItemDescription/Inv_ItemDescription.h"
 
@@ -47,14 +48,25 @@ void UInv_SpatialInventory::EquippedGridSlotClicked(UInv_EquippedGridSlot* GridS
 {
 	// Check if we can Equip Hover Item
 	if (!CanEquipHoverItem(GridSlot, EquipmentTypeTag)) return;
+	UInv_HoverItem* HoverItem = GetHoverItem();
 	
 	// Create and add equipped slotted item
+	const float TileSize = UInv_InventoryStatics::GetInventoryWidget(GetOwningPlayer())->GetTileSize();
+	UInv_EquippedSlottedItem* EquippedSlottedItem =  GridSlot->OnItemEquipped(
+		HoverItem->GetInventoryItem(), EquipmentTypeTag, TileSize);
 	
-	
+	EquippedSlottedItem->OnEquippedSlottedItemClicked.AddDynamic(this, &ThisClass::EquippedSlottedItemClicked);
+
 	// Clear Hover Item
+	
 
 	// Inform server item equipped/unequipped
 	
+	
+}
+
+void UInv_SpatialInventory::EquippedSlottedItemClicked(UInv_EquippedSlottedItem* SlottedItem)
+{
 	
 }
 
@@ -158,6 +170,11 @@ UInv_HoverItem* UInv_SpatialInventory::GetHoverItem() const
 {
 	if (!ActiveGrid.IsValid()) return nullptr;
 	return ActiveGrid->GetHoverItem();
+}
+
+float UInv_SpatialInventory::GetTileSize() const
+{
+	return Grid_Equippables->GetTileSize();
 }
 
 UInv_ItemDescription* UInv_SpatialInventory::GetItemDescription()
