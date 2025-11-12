@@ -75,7 +75,26 @@ void UInv_SpatialInventory::EquippedGridSlotClicked(UInv_EquippedGridSlot* GridS
 
 void UInv_SpatialInventory::EquippedSlottedItemClicked(UInv_EquippedSlottedItem* SlottedItem)
 {
+	// Remove Item Description
+	UInv_InventoryStatics::ItemUnhovered(GetOwningPlayer());
+
+	if (IsValid(GetHoverItem()) && ( GetHoverItem())->IsStackable()) return;
 	
+	// Get Item To equip
+	UInv_InventoryItem* ItemToEquip = IsValid(GetHoverItem()) ? GetHoverItem()->GetInventoryItem() : nullptr;
+	
+	// Get Item to Unequip
+	UInv_InventoryItem* ItemToUnequip = SlottedItem->GetInventoryItem();
+	
+	// Get Equipped Grid Slot
+	UInv_EquippedGridSlot* EquippedGridSlot = FindSlotWithEquippedItem(ItemToUnequip);
+	
+	// Clear Equipped Slot (null Item)
+	// Remove Equipped Slotted Item From GridSlot
+		// Remove Equipped Slotted Item from parent Widget
+		// Assign previously equipped item as Hover Item
+	// Make New equipped slotted item for new Hover Item
+	// Broadcast delegates from InventoryComponent
 }
 
 FReply UInv_SpatialInventory::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -125,6 +144,16 @@ bool UInv_SpatialInventory::CanEquipHoverItem(UInv_EquippedGridSlot* EquippedGri
 		&& HeldItem->GetItemManifest().GetItemCategory() == EInv_ItemCategory::Equippable
 		&& HeldItem->GetItemManifest().GetItemType().MatchesTag(EquipmentTypeTag); 
 	
+}
+
+UInv_EquippedGridSlot* UInv_SpatialInventory::FindSlotWithEquippedItem(UInv_InventoryItem* EquippedItem) const
+{
+	auto* FoundEquippedGridSlot = EquippedGridSlots.FindByPredicate(
+		[EquippedItem](const UInv_EquippedGridSlot* GridSlot)
+		{
+			return GridSlot->GetInventoryItem() == EquippedItem;
+		});
+	return FoundEquippedGridSlot ? *FoundEquippedGridSlot : nullptr;
 }
 
 FInv_SlotAvailabilityResult UInv_SpatialInventory::HasRoomForItem(UInv_ItemComponent* ItemComponent) const
