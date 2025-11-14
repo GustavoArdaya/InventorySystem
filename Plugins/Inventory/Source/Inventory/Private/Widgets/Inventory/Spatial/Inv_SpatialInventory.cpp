@@ -56,10 +56,7 @@ void UInv_SpatialInventory::EquippedGridSlotClicked(UInv_EquippedGridSlot* GridS
 	UInv_EquippedSlottedItem* EquippedSlottedItem =  GridSlot->OnItemEquipped(
 		HoverItem->GetInventoryItem(), EquipmentTypeTag, TileSize);
 	
-	EquippedSlottedItem->OnEquippedSlottedItemClicked.AddDynamic(this, &ThisClass::EquippedSlottedItemClicked);
-
-	// Clear Hover Item
-	Grid_Equippables->ClearHoverItem();
+	EquippedSlottedItem->OnEquippedSlottedItemClicked.AddDynamic(this, &ThisClass::EquippedSlottedItemClicked);	
 
 	// Inform server item equipped/unequipped
 	UInv_InventoryComponent* InventoryComponent = UInv_InventoryStatics::GetInventoryComponent(GetOwningPlayer());
@@ -70,7 +67,10 @@ void UInv_SpatialInventory::EquippedGridSlotClicked(UInv_EquippedGridSlot* GridS
 	if (GetOwningPlayer()->GetNetMode() != NM_DedicatedServer)
 	{
 		InventoryComponent->OnItemEquipped.Broadcast(HoverItem->GetInventoryItem());
-	}	
+	}
+
+	// Clear Hover Item
+	Grid_Equippables->ClearHoverItem();
 }
 
 void UInv_SpatialInventory::EquippedSlottedItemClicked(UInv_EquippedSlottedItem* EquippedSlottedItem)

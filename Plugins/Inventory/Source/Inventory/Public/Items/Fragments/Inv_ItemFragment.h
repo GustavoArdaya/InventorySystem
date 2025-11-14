@@ -229,6 +229,7 @@ struct FInv_EquipmentFragment : public FInv_InventoryItemFragment
 	void OnEquip(APlayerController* PlayerController);
 	void OnUnEquip(APlayerController* PlayerController);
 	virtual void Assimilate(UInv_CompositeBase* Composite) const override;
+	virtual void Manifest() override;
 
 private:
 
