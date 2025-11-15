@@ -7,6 +7,9 @@
 #include "Inv_EquipmentComponent.generated.h"
 
 
+struct FInv_ItemManifest;
+struct FInv_EquipmentFragment;
+class AInv_EquipActor;
 class UInv_InventoryItem;
 class UInv_InventoryComponent;
 
@@ -33,5 +36,9 @@ private:
 	void OnItemUnequipped(UInv_InventoryItem* UnequippedItem);
 
 	void InitInventoryComponent();
+	AInv_EquipActor* SpawnEquipActor(FInv_EquipmentFragment* EquipmentFragment, const FInv_ItemManifest& Manifest, USkeletalMeshComponent* AttachMesh);
+
+	UPROPERTY()
+	TArray<TObjectPtr<AInv_EquipActor>> EquippedActors;
 	
 };
