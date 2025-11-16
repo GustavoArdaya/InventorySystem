@@ -21,6 +21,9 @@ class INVENTORY_API UInv_EquipmentComponent : public UActorComponent
 
 public:
 
+	void SetOwningSkeletalMesh(USkeletalMeshComponent* InSkeletalMesh);
+	void SetIsProxy(bool bInIsProxy) { bIsProxy = bInIsProxy; }
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -49,5 +52,7 @@ private:
 
 	UFUNCTION()
 	void OnPossessedPawnChanged(APawn* OldPawn, APawn* NewPawn);
+
+	bool bIsProxy{false};
 	
 };
