@@ -28,4 +28,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USkeletalMeshComponent> ProxyMesh;
+
+	FTimerHandle TimerForNextTick;
+
+	void DelayedInitializeOwner();
+	void DelayedInitialization();
 };

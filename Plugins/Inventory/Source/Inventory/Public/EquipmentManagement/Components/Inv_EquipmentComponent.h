@@ -23,6 +23,7 @@ public:
 
 	void SetOwningSkeletalMesh(USkeletalMeshComponent* InSkeletalMesh);
 	void SetIsProxy(bool bInIsProxy) { bIsProxy = bInIsProxy; }
+	void InitializeOwner(APlayerController* PlayerController);
 
 protected:
 	virtual void BeginPlay() override;
