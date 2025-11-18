@@ -812,6 +812,8 @@ void UInv_InventoryGrid::OnGridSlotClicked(int32 GridIndex, const FPointerEvent&
 		return;
 	}
 
+	if (!IsInGridBounds(ItemDropIndex, HoverItem->GetGridDimensions())) return;
+
 	auto GridSlot = GridSlots[ItemDropIndex];
 	if (!GridSlot->GetInventoryItem().IsValid())
 	{

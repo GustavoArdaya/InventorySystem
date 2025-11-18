@@ -22,6 +22,7 @@ public:
 	void InitItemManifest(FInv_ItemManifest CopyOfManifest);
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	FInv_ItemManifest GetItemManifest() const { return ItemManifest; }
+	FInv_ItemManifest& GetItemManifestMutable() { return ItemManifest; }
 	void PickedUp();
 
 protected:
